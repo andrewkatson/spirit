@@ -4,3 +4,10 @@
 test/lex/matlib_static_switch.h
 
 test/lex/matlib_static.h
+
+# Bazel
+/bazel-*
+/external
+/.cache
+/compile_commands.json
+user.bazelrc
