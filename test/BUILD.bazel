@@ -1,0 +1,21 @@
+load("@rules_cc//cc:defs.bzl", "cc_test")
+
+_TESTS = {
+    "test_headers/test.cpp": [],
+}
+
+[cc_test(
+    name = test.replace("/", "_"),
+    srcs = ["{}.cpp".format(test)] + glob(["*.hpp"]),
+    defines = select({
+        "@platforms//os:windows": ["WIN32_LEAN_AND_MEAN=1"],
+        "@platforms//os:macos": [],
+        "//conditions:default": [],
+    }),
+    deps = [
+        "@boost.test",
+        "@boost.test//:unit_test_main",
+        "@boost.spirit",
+    ] + _TESTS[test],
+) for test in _TESTS]
+

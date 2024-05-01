@@ -1,0 +1,10 @@
+module(
+    name = "boost.spirit.test",
+)
+
+local_path_override(
+    module_name = "boost.spirit",
+    path = ".."
+)
+
+bazel_dep(name = "boost.spirit")
