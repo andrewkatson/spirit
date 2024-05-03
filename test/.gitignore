@@ -3,3 +3,10 @@
 /*.gitignore
 /test_dfa.hpp
 /test_switch.hpp
+
+# Bazel
+/bazel-*
+/external
+/.cache
+/compile_commands.json
+user.bazelrc

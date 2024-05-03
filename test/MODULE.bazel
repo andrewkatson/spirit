@@ -8,3 +8,5 @@ local_path_override(
 )
 
 bazel_dep(name = "boost.spirit")
+bazel_dep(name = "boost.test", version = "1.83.0.bzl.4")
+
