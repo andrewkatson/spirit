@@ -47,7 +47,7 @@ _TESTS = {
         # Fails to build "classic_sequential_and", 
         "classic_sequential_or", "classic_skipper_fwd", 
         # Fails to build "classic_skipper",
-        "classic_spirit", "classic_static", "classic_stored_rule_fwd", "classic_stored_rule",
+        "classic_spirit", "classic_stored_rule_fwd", "classic_stored_rule",
         "classic_subrule_fwd", "classic_subrule", "classic_swap_actor", "classic_switch", "classic_symbols_fwd",
         "classic_symbols", 
         # Fails to build "classic_traverse", 
@@ -62,6 +62,14 @@ _TESTS = {
         "phoenix1_statements", "phoenix1_tuple_helpers", "phoenix1_tuples",
         "phoenix1"
     ],
+}
+
+_LINUX_TESTS = {
+    "test_headers/test": ["classic_static"]
+}
+
+_MAC_TESTS = {
+    "test_headers/test": ["classic_static"]
 }
 
 [[cc_test(
@@ -79,3 +87,42 @@ _TESTS = {
     ],
 ) for header in _TESTS[test]]for test in _TESTS]
 
+[[cc_test(
+    name = "{}_{}_linux".format(test.replace("/", "_"), header),
+    srcs = ["{}.cpp".format(test)],
+    defines = ["BOOST_SPIRIT_HEADER_NAME=boost/spirit/include/{}.hpp".format(header)] + select({
+        "@platforms//os:windows": ["WIN32_LEAN_AND_MEAN=1"],
+        "@platforms//os:macos": [],
+        "//conditions:default": [],
+    }),
+    target_compatible_with = select({
+        "@platforms//os:windows": ["@platforms//:incompatible"],
+        "@platforms//os:macos": ["@platforms//:incompatible"],
+        "//conditions:default": [],
+    }),
+    deps = [
+        "@boost.test",
+        "@boost.test//:unit_test_main",
+        "@boost.spirit",
+    ],
+) for header in _LINUX_TESTS[test]]for test in _LINUX_TESTS]
+
+[[cc_test(
+    name = "{}_{}_mac".format(test.replace("/", "_"), header),
+    srcs = ["{}.cpp".format(test)],
+    defines = ["BOOST_SPIRIT_HEADER_NAME=boost/spirit/include/{}.hpp".format(header)] + select({
+        "@platforms//os:windows": ["WIN32_LEAN_AND_MEAN=1"],
+        "@platforms//os:macos": [],
+        "//conditions:default": [],
+    }),
+    target_compatible_with = select({
+        "@platforms//os:windows": ["@platforms//:incompatible"],
+        "@platforms//os:macos": [],
+        "//conditions:default": ["@platforms//:incompatible"],
+    }),
+    deps = [
+        "@boost.test",
+        "@boost.test//:unit_test_main",
+        "@boost.spirit",
+    ],
+) for header in _MAC_TESTS[test]]for test in _MAC_TESTS]
