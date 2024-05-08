@@ -85,6 +85,13 @@ _MAC_TESTS = {
         "@boost.test//:unit_test_main",
         "@boost.spirit",
     ],
+    linkstatic = select({
+        # Windows needs to link statically to get rid of undefined symbols
+        "@platforms//os:windows": True,
+        "@platforms//os:macos": False,
+        # Posix needs to link statically to get rid of undefined symbols
+        "//conditions:default": True,
+    }),
 ) for header in _TESTS[test]]for test in _TESTS]
 
 [[cc_test(
@@ -105,6 +112,8 @@ _MAC_TESTS = {
         "@boost.test//:unit_test_main",
         "@boost.spirit",
     ],
+    # Posix needs to link statically to get rid of undefined symbols
+    linkstatic = True,
 ) for header in _LINUX_TESTS[test]]for test in _LINUX_TESTS]
 
 [[cc_test(
@@ -125,4 +134,5 @@ _MAC_TESTS = {
         "@boost.test//:unit_test_main",
         "@boost.spirit",
     ],
+    linkstatic = False,
 ) for header in _MAC_TESTS[test]]for test in _MAC_TESTS]
